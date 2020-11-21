@@ -186,6 +186,19 @@ define DownloadMethod/git
 	)
 endef
 
+define DownloadMethod/gittest
+	$(call wrap_mirror,$(1),$(2), \
+		echo "Checking out files from the svn repository..."; \
+		mkdir -p $(TMP_DIR)/dl && \
+		cd $(TMP_DIR)/dl && \
+		rm -rf $(PKG_NAME) && \
+		[ \! -d $(PKG_NAME) ] && \
+		git clone -c Http.sslverify=false --depth 1 --single-branch -b $(VERSION) $(URL) $(PKG_NAME) 2>/dev/null && \
+		mv $(TMP_DIR)/dl/$(PKG_NAME) $(DL_DIR)/ && \
+		rm -rf $(PKG_NAME); \
+	)
+endef
+
 define DownloadMethod/github_archive
 	$(call wrap_mirror,$(1),$(2), \
 		$(SCRIPT_DIR)/dl_github_archive.py \
